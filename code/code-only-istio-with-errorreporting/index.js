@@ -32,7 +32,12 @@ app.get('/', async(req, res) => {
 	const begin = Date.now()
 
 	// Do Bad Things
-	createIssues(req, res)
+	try{
+		createIssues(req, res)
+	}
+	catch(err){
+		return next(err);
+	}
 
 	// Forward Headers for tracing
 	const headers = forwardTraceHeaders(req)
@@ -87,6 +92,6 @@ function createIssues(req, res) {
 	const failPercent = Number(req.header('fail')) || 0
 	console.log(`failPercent: ${failPercent}`)
 	if (Math.random() < failPercent) {
-		throw new Error('failed');
+		throw new Error('random failed');
 	}
 }
