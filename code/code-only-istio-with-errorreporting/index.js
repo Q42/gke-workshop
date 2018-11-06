@@ -28,7 +28,7 @@ const express = require('express')
 const app = express()
 const request = require('request-promise-native')
 
-app.get('/', async(req, res) => {
+app.get('/', async(req, res, next) => {
 	const begin = Date.now()
 
 	// Do Bad Things
