@@ -35,6 +35,9 @@ deploy-istio:
 	kubectl apply -f istio.yaml
 	kubectl label namespace default istio-injection=enabled --overwrite
 	sleep 60
+deploy-stackdriver-custom-metrics:
+	-sed -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' -e 's~<CLUSTER_NAME>~$(CLUSTER_NAME)~g' -e 's~<CLUSTER_LOCATION>~$(ZONE)~g' ./configs/prometheus-metrics-to-stackdriver/prometheus-service.yml | kubectl apply -f -
+	#-sed -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' ./configs/kube/deployments.yaml | kubectl apply -f -
 deploy-stuff:
 	kubectl apply -f ./configs/kube/services.yaml
 	-sed -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' ./configs/kube/deployments.yaml | kubectl apply -f -
