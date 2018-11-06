@@ -62,11 +62,13 @@ start-monitoring-services:
 	$(shell kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686 & kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 & kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000 & kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090)
 build:
 	docker build -t gcr.io/$(PROJECT_ID)/istiotest:1.0 ./code/code-only-istio
+	docker build -t gcr.io/$(PROJECT_ID)/code-only-istio-with-errorreporting:1.0 ./code/code-only-istio-with-errorreporting
 	docker build -t gcr.io/$(PROJECT_ID)/istio-opencensus-simple:1.0 ./code/code-opencensus-simple
 	docker build -t gcr.io/$(PROJECT_ID)/istio-opencensus-full:1.0 ./code/code-opencensus-full
 push:
 	-gcloud auth configure-docker
 	docker push gcr.io/$(PROJECT_ID)/istiotest:1.0
+	docker push gcr.io/$(PROJECT_ID)/code-only-istio-with-errorreporting:1.0
 	docker push gcr.io/$(PROJECT_ID)/istio-opencensus-simple:1.0
 	docker push gcr.io/$(PROJECT_ID)/istio-opencensus-full:1.0
 run-local:
