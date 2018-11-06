@@ -18,12 +18,6 @@ const port = process.env.PORT || 3000
 const upstream_uri = process.env.UPSTREAM_URI || 'http://worldclockapi.com/api/json/utc/now'
 const service_name = process.env.SERVICE_NAME || 'test-1-v1'
 
-const ErrorReporting = require('@google-cloud/error-reporting')
-  .ErrorReporting;
-
-// Instantiates a client
-const errors = new ErrorReporting();
-
 const express = require('express')
 const app = express()
 const request = require('request-promise-native')
@@ -56,7 +50,10 @@ app.get('/', async(req, res, next) => {
 	res.end(`${service_name} - ${timeSpent}\n${upstream_uri} -> ${up}`)
 });
 
-app.use(errors.express);
+app.use(function (err, req, res, next) {
+  console.error(err.stack);// <-- this is the magic to have stackdriver auto-infer errors
+  res.status(500).send('Something broke!');
+})
 
 app.listen(port, () => {
 	console.log(`${service_name} listening on port ${port}!`)
