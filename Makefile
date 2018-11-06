@@ -42,6 +42,9 @@ deploy-kube-state-metrics:
 deploy-stuff:
 	kubectl apply -f ./configs/kube/services.yaml
 	-sed -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' ./configs/kube/deployments.yaml | kubectl apply -f -
+deploy-app-with-stackdriver-error-reporting:
+	-sed -e 's~istiotest:1.0~code-only-istio-with-errorreporting:1.0~g' -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' ./configs/kube/deployments.yaml | kubectl apply -f -
+
 get-stuff:
 	kubectl get pods && kubectl get svc && kubectl get svc istio-ingressgateway -n istio-system
 
